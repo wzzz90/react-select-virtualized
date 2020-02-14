@@ -15,7 +15,7 @@ const loadListOptions = (input, callback) =>
     const result = ops.filter(({ label }) => label.toLowerCase().includes(input));
     action(`loadListOptions`)(result);
     callback(result);
-  }, 800);
+  }, 8000000);
 
 const loadGroupedOptions = (input, callback) =>
   setTimeout(() => {
@@ -34,7 +34,7 @@ const loadGroupedOptions = (input, callback) =>
   }, 800);
 
 storiesOf(`React Select Virtualized/Async`, module)
-  .addDecorator((story) => <div style={{ width: '30em' }}> {story()} </div>)
+  .addDecorator(story => <div style={{ width: '30em' }}> {story()} </div>)
   .addDecorator(withInfo)
   .addParameters({
     info: {
@@ -43,7 +43,7 @@ storiesOf(`React Select Virtualized/Async`, module)
     },
   })
   .add('Async with default options', () => {
-    return <Async defaultOptions={optionsDefault} loadOptions={loadListOptions} />;
+    return <Async defaultOptions={optionsDefault} loadOptions={loadListOptions} menuIsOpen />;
   })
   .add('Async without default options', () => {
     return <Async loadOptions={loadListOptions} />;
@@ -54,7 +54,7 @@ storiesOf(`React Select Virtualized/Async`, module)
       <Async
         value={store.state.value}
         loadOptions={loadListOptions}
-        onChange={(val) => {
+        onChange={val => {
           store.set({ value: val });
           action(`onChange`)(val);
         }}
@@ -73,7 +73,7 @@ storiesOf(`React Select Virtualized/Async`, module)
       <Async
         value={store.state.value}
         loadOptions={loadGroupedOptions}
-        onChange={(val) => {
+        onChange={val => {
           store.set({ value: val });
           action(`onChange`)(val);
         }}

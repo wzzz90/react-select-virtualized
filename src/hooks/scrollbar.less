@@ -1,0 +1,40 @@
+@import '../../../less-mixins/index';
+.dmc-scrollbar {
+  position: relative;
+  height: 100%;
+  overflow: auto;
+  &.ps {
+    .ps__thumb-y {
+      width: 7px;
+      background-color: #5f6984;
+    }
+    .ps__rail-y:hover > .ps__thumb-y,
+    .ps__rail-y:focus > .ps__thumb-y,
+    .ps__rail-y.ps--clicking .ps__thumb-y {
+      width: 7px;
+      background-color: #5f6984;
+    }
+    .ps__rail-x,
+    .ps__rail-y {
+      z-index: @zindex-scrollbar;
+    }
+    .ps__rail-x:hover,
+    .ps__rail-y:hover,
+    .ps__rail-x:focus,
+    .ps__rail-y:focus,
+    .ps__rail-x.ps--clicking,
+    .ps__rail-y.ps--clicking {
+      background-color: transparent;
+    }
+    .ps__thumb-x {
+      height: 7px;
+      background-color: #5f6984;
+    }
+    .ps__rail-x:hover > .ps__thumb-x,
+    .ps__rail-x:focus > .ps__thumb-x,
+    .ps__rail-x.ps--clicking .ps__thumb-x {
+      height: 7px;
+      background-color: #5f6984;
+    }
+  }
+}

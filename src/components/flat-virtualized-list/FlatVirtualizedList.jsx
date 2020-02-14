@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import { getListHeight, getScrollIndex, getNextRowIndex } from '@rsv-lib/getters';
 import { flatVirtualizedListRowRenderer } from '@rsv-lib/renderers';
 import { useDebouncedCallback } from '@rsv-hooks/use-debaunced-callback';
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
-let FlatListVirtualized = (props) => {
+let FlatListVirtualized = props => {
   let listComponent;
 
   const [focusedItemIndex, setFocusedItemIndex] = useState(undefined);
@@ -25,7 +27,9 @@ let FlatListVirtualized = (props) => {
   useEffect(() => {
     // only scroll to index when we have something in the queue of focused and not visible
     if (listComponent && queueScrollToIdx !== undefined && focusedItemIndex !== undefined) {
-      listComponent.current.scrollToRow(getNextRowIndex(focusedItemIndex, queueScrollToIdx, options));
+      listComponent.current.scrollToRow(
+        getNextRowIndex(focusedItemIndex, queueScrollToIdx, options),
+      );
       setQueueScrollToIdx(undefined);
     }
   }, [listComponent, queueScrollToIdx, focusedItemIndex, options]);
@@ -99,7 +103,7 @@ let FlatListVirtualized = (props) => {
         >
           {({ onRowsRendered, registerChild }) => (
             <List
-              ref={(element) => {
+              ref={element => {
                 registerChild(element);
                 listComponent = {
                   current: element,
@@ -135,7 +139,7 @@ FlatListVirtualized.propTypes = {
 };
 
 FlatListVirtualized.defaultProps = {
-  valueGetter: (item) => item && item.value,
+  valueGetter: item => item && item.value,
   maxHeight: 200,
   minimumBatchSize: 100,
 };

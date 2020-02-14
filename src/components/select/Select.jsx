@@ -7,6 +7,7 @@ import { defaultGroupFormat } from '@rsv-lib/renderers';
 import 'react-virtualized/styles.css';
 import { optionsPropTypes } from '@rsv-lib/prop-types';
 import { buildErrorText } from '@rsv-lib/error';
+// import ArrowDown from '../static/ArrowDown.js';
 
 const throwMixControlledError = () => {
   throw new Error(
@@ -16,6 +17,9 @@ const throwMixControlledError = () => {
     ),
   );
 };
+
+const DEAFULT_SELECT_PLACEHOLDER = '请选择';
+const DEAFULT_SELECT_NO_OPTIONS_MESSAGE = '无选项';
 
 let Select = (props, ref) => {
   const reactSelect = useRef('react-select');
@@ -36,14 +40,64 @@ let Select = (props, ref) => {
   }
 
   const [selection, setSelection] = useState(defaultValue || value);
+  const prefixCls = 'dmc-select';
+
+  const rowRender = (option) => {
+    return (
+      <div className={`${prefixCls}-option`}>
+        <svg
+          className={`${prefixCls}-check`}
+          width="48"
+          height="48"
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M36 18L19.5 34 12 26.727"
+            stroke="currentColor"
+            stroke-width="4.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        {option.label}
+      </div>
+    );
+  };
+
+  const DropdownIndicator = () => {
+    return (
+      <svg
+        className={`${prefixCls}-arrow-down`}
+        width="48"
+        height="48"
+        viewBox="0 0 48 48"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M15.3 20.346h17.39l-8.695 8.694-8.694-8.694z" fill="currentColor" />
+      </svg>
+    );
+  };
+
+
+  const noOptionsMessage = () => DEAFULT_SELECT_NO_OPTIONS_MESSAGE;
 
   const defaultProps = {
     isMulti: false,
     isClearable: true,
     isDisabled: false,
-    className: `react-select-virtualized`,
+    classNamePrefix: prefixCls,
+    className: prefixCls,
     isSearchable: true,
+    menuIsOpen: true,
     blurInputOnSelect: true,
+    isClearable: false,
+    // components: { DropdownIndicator },
+    placeholder: DEAFULT_SELECT_PLACEHOLDER,
+    noOptionsMessage,
+    // loadingMessage,
   };
 
   useEffect(() => setSelection(value), [value]);
@@ -94,9 +148,12 @@ let Select = (props, ref) => {
       value={value !== undefined ? value : selection}
       onChange={onChangeHandler}
       options={props.options}
+      // formatOptionLabel={rowRender}
       components={{
+        DropdownIndicator,
         ...props.components,
         ...buildListComponents({
+          formatOptionLabel: rowRender,
           ...props,
           ...memoGroupHeaderOptions,
         }),

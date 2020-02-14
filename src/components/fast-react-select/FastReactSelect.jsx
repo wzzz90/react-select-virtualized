@@ -12,7 +12,23 @@ import { buildErrorText } from '@rsv-lib/error';
 
 const LAG_INDICATOR = 1000;
 
-const loadingMessage = () => <div>...</div>;
+const loadingMessage = () => (
+  <svg
+    className={`dmc-select-icon-loading`}
+    width="48"
+    height="48"
+    viewBox="0 0 48 48"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M24 40c8.837 0 16-7.163 16-16 0-8.723-6.98-15.816-15.66-15.996A16.335 16.335 0 0024 8C15.163 8 8 15.163 8 24"
+      stroke="currentColor"
+      stroke-width="4"
+      stroke-linecap="round"
+    />
+  </svg>
+);
 
 let FastReactSelect = (propsIn, ref) => {
   const {
@@ -29,7 +45,10 @@ let FastReactSelect = (propsIn, ref) => {
 
   const minimumInputSearchIsSet = minimumInputSearch >= 1;
 
-  const listSize = useMemo(() => (grouped && calculateTotalGroupedListSize(options)) || options.length, [options, grouped]);
+  const listSize = useMemo(
+    () => (grouped && calculateTotalGroupedListSize(options)) || options.length,
+    [options, grouped],
+  );
   const [menuIsOpenState, setMenuIsOpen] = useState({ currentInput: '' });
 
   const updateSetMenuIsOpen = useCallback(
@@ -47,7 +66,7 @@ let FastReactSelect = (propsIn, ref) => {
 
   // avoid destructuring to best performance
   const memoOptions = useMemo(() => {
-    return mapLowercaseLabel(options, formatOptionLabel, (itemOption) => {
+    return mapLowercaseLabel(options, formatOptionLabel, itemOption => {
       if (itemOption.options && grouped) {
         return {
           options: mapLowercaseLabel(itemOption.options, formatOptionLabel),
@@ -57,8 +76,10 @@ let FastReactSelect = (propsIn, ref) => {
     });
   }, [options, formatOptionLabel, grouped]);
 
+  console.log(memoOptions, 'memoOptions');
+
   const onInputChange = useCallback(
-    (inputValue) => {
+    inputValue => {
       if (minimumInputSearchIsSet) {
         const inputValLowercase = (inputValue && inputValue.toLowerCase()) || '';
         updateSetMenuIsOpen(inputValLowercase, minimumInputSearch <= inputValLowercase.length);
@@ -69,26 +90,31 @@ let FastReactSelect = (propsIn, ref) => {
   );
 
   // debounce the filter since it is going to be an expensive operation
-  const loadOptions = useDebouncedCallback(
-    (inputValue, callback) => {
-      if (minimumInputSearchIsSet && !menuIsOpenState[menuIsOpenState.currentInput]) {
-        return callback(undefined);
-      }
-      if (!!asyncLoadOptions) {
-        // create an async function that will resolve the callback
-        const asyncLoad = async () => {
-          const newList = await asyncLoadOptions(inputValue);
-          callback(newList);
-        };
+  const loadOptions = useDebouncedCallback((inputValue, callback) => {
+    if (minimumInputSearchIsSet && !menuIsOpenState[menuIsOpenState.currentInput]) {
+      return callback(undefined);
+    }
+    if (!!asyncLoadOptions) {
+      // create an async function that will resolve the callback
+      const asyncLoad = async () => {
+        const newList = await asyncLoadOptions(inputValue);
+        callback(newList);
+      };
 
-        return asyncLoad();
-      }
-      return callback(getFilteredItems({ inputValue, memoOptions, grouped, filterOption }));
-    },
-  );
+      return asyncLoad();
+    }
+    return callback(getFilteredItems({ inputValue, memoOptions, grouped, filterOption }));
+  });
 
   if (creatable && listSize <= LAG_INDICATOR) {
-    return <ReactSelectCreatableSelect ref={ref} {...props} options={memoOptions} captureMenuScroll={false} />;
+    return (
+      <ReactSelectCreatableSelect
+        ref={ref}
+        {...props}
+        options={memoOptions}
+        captureMenuScroll={false}
+      />
+    );
   }
 
   if (creatable && listSize > LAG_INDICATOR) {
@@ -101,7 +127,9 @@ let FastReactSelect = (propsIn, ref) => {
         cacheOptions={!grouped}
         loadOptions={loadOptions}
         defaultOptions={minimumInputSearch >= 1 || memoOptions.length === 0 ? true : memoOptions}
-        menuIsOpen={minimumInputSearchIsSet ? !!menuIsOpenState[menuIsOpenState.currentInput] : undefined}
+        menuIsOpen={
+          minimumInputSearchIsSet ? !!menuIsOpenState[menuIsOpenState.currentInput] : undefined
+        }
         onInputChange={onInputChange}
         captureMenuScroll={false}
       />
@@ -110,7 +138,13 @@ let FastReactSelect = (propsIn, ref) => {
 
   if (!creatable && listSize <= LAG_INDICATOR && !minimumInputSearchIsSet && !asyncLoadOptions) {
     return (
-      <ReactSelect ref={ref} {...props} filterOption={filterOption} options={memoOptions} captureMenuScroll={false} />
+      <ReactSelect
+        ref={ref}
+        {...props}
+        filterOption={filterOption}
+        options={memoOptions}
+        captureMenuScroll={false}
+      />
     );
   }
 
@@ -124,14 +158,18 @@ let FastReactSelect = (propsIn, ref) => {
         cacheOptions={!grouped}
         loadOptions={loadOptions}
         defaultOptions={minimumInputSearch >= 1 || memoOptions.length === 0 ? true : memoOptions}
-        menuIsOpen={minimumInputSearchIsSet ? !!menuIsOpenState[menuIsOpenState.currentInput] : undefined}
+        menuIsOpen={
+          minimumInputSearchIsSet ? !!menuIsOpenState[menuIsOpenState.currentInput] : undefined
+        }
         onInputChange={onInputChange}
         captureMenuScroll={false}
       />
     );
   }
 
-  throw new Error(buildErrorText('Nothing to render, something is wrong in FastReactSelect component'));
+  throw new Error(
+    buildErrorText('Nothing to render, something is wrong in FastReactSelect component'),
+  );
 };
 
 FastReactSelect = forwardRef(FastReactSelect);

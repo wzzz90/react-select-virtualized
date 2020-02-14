@@ -1,14 +1,13 @@
 import React from 'react';
 
-import { FastOption } from '@rsv-components/fast-option';
+import {FastOption} from '@rsv-components/fast-option';
 
-export const flatVirtualizedListRowRenderer = ({ children, onOptionFocused, optionHeight, formatOptionLabel }) => ({
-  key,
-  index,
-  style,
-  isVisible,
-  isScrolling,
-}) => {
+export const flatVirtualizedListRowRenderer = ({
+  children,
+  onOptionFocused,
+  optionHeight,
+  formatOptionLabel,
+}) => ({key, index, style, isVisible, isScrolling}) => {
   // reality is that we do not need to pass the list here. we can work straight with the children.
   // since the actual behavior will be handled by the renderer
   const thisProps = children[index].props;
@@ -19,6 +18,8 @@ export const flatVirtualizedListRowRenderer = ({ children, onOptionFocused, opti
   // if (thisProps.isFocused && !isScrolling) {
   //   onOptionFocused({ data: thisProps.data, index, isVisible, isScrolling });
   // }
+
+  console.log (formatOptionLabel);
 
   return (
     <div className="flat-virtualized-item" key={key} style={style}>
