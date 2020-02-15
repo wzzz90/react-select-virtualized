@@ -1,7 +1,7 @@
-import {components as ReactSelectComponents} from 'react-select';
-import React, {memo} from 'react';
+import { components as ReactSelectComponents } from 'react-select';
+import React, { memo } from 'react';
 import FlatVirtualizedList from './FlatVirtualizedList';
-import {menuListItemHeight} from '@rsv-lib/defaults';
+import { menuListItemHeight } from '@rsv-lib/defaults';
 
 const FlatVirtualizedListFactory = ({
   optionHeight = menuListItemHeight,
@@ -9,18 +9,13 @@ const FlatVirtualizedListFactory = ({
   valueGetter,
   formatOptionLabel,
 }) =>
-  memo (props => {
-    const selectedValue = props.getValue () ? props.getValue ()[0] : undefined;
+  memo(props => {
+    const selectedValue = props.getValue() ? props.getValue()[0] : undefined;
 
     if (props.children && !props.children.length) {
-      return (
-        <ReactSelectComponents.NoOptionsMessage {...props.children.props} />
-      );
+      return <ReactSelectComponents.NoOptionsMessage {...props.children.props} />;
     }
 
-    console.log ('====================================');
-    console.log (props, 'FlatVirtualizedListprops');
-    console.log ('====================================');
     return (
       <FlatVirtualizedList
         {...props}

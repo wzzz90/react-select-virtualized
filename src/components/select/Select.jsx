@@ -1,6 +1,15 @@
 import { FastReactSelect } from '../fast-react-select';
-import PropTypes from 'prop-types';
-import React, { useRef, useImperativeHandle, useState, forwardRef, useMemo, memo, useCallback, useEffect } from 'react';
+import PropTypes, { string } from 'prop-types';
+import React, {
+  useRef,
+  useImperativeHandle,
+  useState,
+  forwardRef,
+  useMemo,
+  memo,
+  useCallback,
+  useEffect,
+} from 'react';
 import './styles.css';
 import { buildListComponents, getStyles } from '@rsv-lib/select';
 import { defaultGroupFormat } from '@rsv-lib/renderers';
@@ -33,6 +42,7 @@ let Select = (props, ref) => {
     value,
     optionHeight,
     creatable,
+    type,
   } = props;
 
   if (defaultValue && value) {
@@ -42,7 +52,7 @@ let Select = (props, ref) => {
   const [selection, setSelection] = useState(defaultValue || value);
   const prefixCls = 'dmc-select';
 
-  const rowRender = (option) => {
+  const rowRender = option => {
     return (
       <div className={`${prefixCls}-option`}>
         <svg
@@ -81,19 +91,44 @@ let Select = (props, ref) => {
     );
   };
 
-
   const noOptionsMessage = () => DEAFULT_SELECT_NO_OPTIONS_MESSAGE;
+  const formatCreateLabel = string => {
+    return (
+      <div className={`${prefixCls}-create-options`}>
+        <svg
+          className={`${prefixCls}-create-icon`}
+          width="48"
+          height="48"
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M11.5 24H36.5" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+          <path
+            d="M24 11.5L24 36.5"
+            stroke="currentColor"
+            stroke-width="6"
+            stroke-linecap="round"
+          />
+        </svg>
+        {`创建选项“${string}”`}
+      </div>
+    );
+  };
+  const selectCls = `${prefixCls} ${prefixCls}-${type} ${prefixCls}-no-border`;
 
   const defaultProps = {
     isMulti: false,
     isClearable: true,
     isDisabled: false,
     classNamePrefix: prefixCls,
-    className: prefixCls,
+    className: selectCls,
     isSearchable: true,
-    menuIsOpen: true,
+    // menuIsOpen: true,
     blurInputOnSelect: true,
     isClearable: false,
+    formatCreateLabel: formatCreateLabel,
+
     // components: { DropdownIndicator },
     placeholder: DEAFULT_SELECT_PLACEHOLDER,
     noOptionsMessage,
@@ -103,7 +138,8 @@ let Select = (props, ref) => {
   useEffect(() => setSelection(value), [value]);
 
   const memoGroupHeaderOptions = useMemo(() => {
-    if (!grouped && !formatGroupHeaderLabel && !groupHeaderHeight) return { formatGroupHeaderLabel: false };
+    if (!grouped && !formatGroupHeaderLabel && !groupHeaderHeight)
+      return { formatGroupHeaderLabel: false };
 
     const groupHeaderHeightValue = groupHeaderHeight || optionHeight;
     return {
@@ -130,7 +166,7 @@ let Select = (props, ref) => {
     focus: () => {
       reactSelect.current.focus();
     },
-    select: (item) => {
+    select: item => {
       if (value) {
         throwMixControlledError();
       }

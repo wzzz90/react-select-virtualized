@@ -9,7 +9,7 @@ import Select from './_SelectTablePropsStoryFix';
 import { optionsDefault, opsGroup, defaultValue, op1500, ops2500, op100 } from '@rsv-lib/data';
 
 storiesOf(`React Select Virtualized/props`, module)
-  .addDecorator((story) => <div style={{ width: '30em' }}> {story()} </div>)
+  .addDecorator(story => <div style={{ width: '30em' }}> {story()} </div>)
   .addDecorator(withInfo)
   .addParameters({
     info: {
@@ -17,9 +17,13 @@ storiesOf(`React Select Virtualized/props`, module)
       maxPropsIntoLine: 1,
     },
   })
-  .add('Basic', () => <Select options={optionsDefault} />)
-  .add('with default value uncontrolled', () => <Select defaultValue={defaultValue} options={optionsDefault} />)
-  .add('with default value controlled', () => <Select value={defaultValue} options={optionsDefault} />)
+  .add('Basic', () => <Select type="compact" options={optionsDefault} />)
+  .add('with default value uncontrolled', () => (
+    <Select defaultValue={defaultValue} options={optionsDefault} />
+  ))
+  .add('with default value controlled', () => (
+    <Select value={defaultValue} options={optionsDefault} />
+  ))
   .add(
     'with value controlled',
     withState({ value: defaultValue })(({ store }) => (
@@ -35,7 +39,7 @@ storiesOf(`React Select Virtualized/props`, module)
         <Select
           value={store.state.value}
           options={optionsDefault}
-          onChange={(val) => {
+          onChange={val => {
             store.set({ value: val });
           }}
         />
@@ -60,7 +64,9 @@ storiesOf(`React Select Virtualized/props`, module)
     return <Select options={op1500Mapped} filterOption={customFilter} />;
   })
   .add('disabled select', () => <Select options={optionsDefault} isDisabled />)
-  .add('empty options in the select', () => <Select noOptionsMessage={() => 'No Items...'} options={[]} />)
+  .add('empty options in the select', () => (
+    <Select noOptionsMessage={() => 'No Items...'} options={[]} />
+  ))
   .add('select with custom labels format', () => {
     const labelFormat = ({ label, lang }, { context }) => {
       if (context === 'value') return `${label} - ${lang}`;
@@ -88,7 +94,7 @@ storiesOf(`React Select Virtualized/props`, module)
       <Select
         value={store.state.value}
         options={opsGroup}
-        onChange={(val) => {
+        onChange={val => {
           store.set({ value: val });
           action(`onChange`)(val);
         }}

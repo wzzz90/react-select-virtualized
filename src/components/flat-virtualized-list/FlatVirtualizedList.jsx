@@ -4,8 +4,11 @@ import PropTypes from 'prop-types';
 import { getListHeight, getScrollIndex, getNextRowIndex } from '@rsv-lib/getters';
 import { flatVirtualizedListRowRenderer } from '@rsv-lib/renderers';
 import { useDebouncedCallback } from '@rsv-hooks/use-debaunced-callback';
+// import Scrollbar from '../../hooks/Scrollbar';
 import PerfectScrollbar from 'perfect-scrollbar';
+import useScrollbar from '../../hooks/useScrollbar';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
+import '../select/styles.css';
 
 let FlatListVirtualized = props => {
   let listComponent;
@@ -25,6 +28,9 @@ let FlatListVirtualized = props => {
   } = props;
 
   useEffect(() => {
+    document.querySelector(`.dmc-select__menu`) &&
+      !document.querySelector('.ps__rail-x') &&
+      new PerfectScrollbar(document.querySelector(`.dmc-select__menu`));
     // only scroll to index when we have something in the queue of focused and not visible
     if (listComponent && queueScrollToIdx !== undefined && focusedItemIndex !== undefined) {
       listComponent.current.scrollToRow(
@@ -92,6 +98,7 @@ let FlatListVirtualized = props => {
   }, 100);
 
   return (
+    // <Scrollbar id={'sss'} ref={'ss'}>
     <AutoSizer disableHeight>
       {({ width }) => (
         <InfiniteLoader
@@ -122,6 +129,7 @@ let FlatListVirtualized = props => {
         </InfiniteLoader>
       )}
     </AutoSizer>
+    // </Scrollbar>
   );
 };
 
