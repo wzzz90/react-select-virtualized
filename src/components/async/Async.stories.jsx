@@ -15,7 +15,7 @@ const loadListOptions = (input, callback) =>
     const result = ops.filter(({ label }) => label.toLowerCase().includes(input));
     action(`loadListOptions`)(result);
     callback(result);
-  }, 8000000);
+  }, 800);
 
 const loadGroupedOptions = (input, callback) =>
   setTimeout(() => {

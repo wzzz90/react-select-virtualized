@@ -17,9 +17,9 @@ storiesOf(`React Select Virtualized/props`, module)
       maxPropsIntoLine: 1,
     },
   })
-  .add('Basic', () => <Select type="compact" options={optionsDefault} />)
+  .add('compact', () => <Select type="compact" options={optionsDefault} />)
   .add('with default value uncontrolled', () => (
-    <Select defaultValue={defaultValue} options={optionsDefault} />
+    <Select defaultValue={defaultValue} menuIsOpen options={optionsDefault} />
   ))
   .add('with default value controlled', () => (
     <Select value={defaultValue} options={optionsDefault} />
